@@ -64,7 +64,7 @@ pygame.init()
 display_width = 800
 display_height = 600
 
-balloon_speed = 3
+balloon_speed = 5
 
 # set colour values arrrays
 black = (0, 0, 0)
@@ -86,6 +86,7 @@ clock = pygame.time.Clock()
 
 #load images
 stabbyImg = pygame.image.load('otherSources/glow_nyoomba_stabby.png')
+gladBotImg = pygame.image.load('otherSources/glow_nyoomba_gladbot.png')
 # print(stabbyImg.get_rect().size)
 stabbyImg = pygame.transform.scale(stabbyImg, (stabby_width, stabby_height))
 
@@ -98,6 +99,9 @@ def stabby(x, y):
     # render stabby in the game using blit
     gameDisplay.blit(stabbyImg, (x, y))
 
+def gladBot(x, y):
+    # render stabby in the game using blit
+    gameDisplay.blit(gladBotImg, (x, y))
 
 def text_objects(text, font):
     # render text objects
@@ -119,7 +123,13 @@ def display_win():
     TextSurf, TextRect = text_objects("You did it!", largeText)
     TextRect.center = ((display_width / 2), (display_height / 2))
     gameDisplay.blit(TextSurf, TextRect)
+    x = (display_width * 0.425)
+    y = (display_height * 0.75)
+    gladBot(x, y)
+
     pygame.display.update()
+
+    time.sleep(2)
 
 
 def game_loop():
@@ -205,10 +215,13 @@ def game_loop():
 
         else:
             win = True
-            balloon_y = display_height + 90
+            # balloon_y = display_height + 90
+            x = (display_width * 0.425)
+            y = (display_height * 0.75)
+            gameDisplay.fill(white)
             pygame.mixer.Sound.play(win_sound)
             display_win()
-            time.sleep(2)
+            # time.sleep(2)
             gameExit = True
 
 
@@ -216,7 +229,7 @@ def game_loop():
             # balloon pop
             indexNames = df[df['dbId'] == current_text_id].index
             df.drop(indexNames, inplace=True)
-            print(df)
+            # print(df)
             pygame.mixer.Sound.play(pop_sound)
             obj_exists = False
 
@@ -224,7 +237,8 @@ def game_loop():
 
         if obj_exists:
             balloon(80, balloon_x, balloon_y, balloon_color, balloon_text)
-        stabby(x, y)
+        if not win:
+            stabby(x, y)
 
 
         pygame.display.update()
